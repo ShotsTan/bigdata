@@ -1,3 +1,4 @@
+import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.java.functions.FlatMapIterator;
 import org.apache.flink.api.java.tuple.builder.Tuple2Builder;
