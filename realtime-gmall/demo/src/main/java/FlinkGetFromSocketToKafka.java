@@ -1,12 +1,17 @@
 import org.apache.flink.api.common.serialization.SerializationSchema;
+import org.apache.flink.api.java.functions.FlatMapIterator;
+import org.apache.flink.api.java.tuple.builder.Tuple2Builder;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.util.Collector;
 import reactor.util.function.Tuple2;
 import redis.clients.jedis.Tuple;
+
+import java.util.Iterator;
 
 /**
  * @ClassName: FlinkGetFromSocketToKafka
@@ -41,6 +46,17 @@ public class FlinkGetFromSocketToKafka {
 
 
         //4.处理数据并输出，发送kafka
+        sourceStream.flatMap(new RichFlatMapFunction<String, Tuple2<String,Integer>>() {
+            @Override
+            public void flatMap(String line, Collector<Tuple2<String, Integer>> collector) throws Exception {
+                String[] words = line.split(" ");
+                for (String word : words) {
+//                    collector.collect();
+                    collector.close();
+                }
+
+            }
+        }).sinkTo(kafkaSink);
 
 
 
